@@ -58,8 +58,7 @@
   <div id="editor" class="box" style="display:none;">
     <h3>📋 Edit Vegetable Prices</h3>
     <div id="priceForm"></div>
-   <button type="button" onclick="savePrices()" class="btn btn-success mt-3">💾 Save Prices</button>
-
+    <button type="button" onclick="savePrices()" class="btn btn-success mt-3">💾 Save Prices</button>
     <div class="alert alert-success alert-box" id="successAlert">✅ Prices updated successfully!</div>
     <!-- Navbar -->
   <nav class="navbar navbar-expand-lg" style="background-color: #d4edda;">
@@ -98,9 +97,7 @@
   </nav>
   </div>
 
-   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <script>
     const password = "shop123";
 
     function checkPassword() {
@@ -132,46 +129,18 @@
         });
     }
 
-
-
-
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_APP.firebaseapp.com",
-    projectId: "YOUR_APP",
-    storageBucket: "YOUR_APP.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "YOUR_APP_ID"
-  }
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // Attach db and setDoc to window so they are usable in the regular script
-  window.db = db;
-  window.setDoc = setDoc;
-  window.doc = doc;
-
-  async function savePrices() {
-  const inputs = document.querySelectorAll("#priceForm input");
-  const newPrices = {};
-  inputs.forEach(input => {
-    newPrices[input.name] = parseInt(input.value);
-  });
-
-  try {
-    await setDoc(doc(db, "prices", "latest"), newPrices);
-    alert("✅ Prices updated for all users!");
-  } catch (err) {
-    alert("Error updating prices: " + err.message);
-  }
-}
-
-</script>
-
-
-
-  
+    function savePrices() {
+      const inputs = document.querySelectorAll("#priceForm input");
+      const newPrices = {};
+      inputs.forEach(input => {
+        newPrices[input.name] = parseInt(input.value);
+      });
+      localStorage.setItem("vegPrices", JSON.stringify(newPrices));
+      const successAlert = document.getElementById("successAlert");
+      successAlert.style.display = "block";
+      setTimeout(() => successAlert.style.display = "none", 3000);
+    }
+  </script>
 
 </body>
 </html>

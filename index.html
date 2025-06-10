@@ -274,44 +274,7 @@
     </div>
   </div>
 </section>
-  <!-- Firebase SDKs -->
-<!-- Firebase SDK -->
-<script type="module">
-  // Import required Firebase modules
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_APP.firebaseapp.com",
-    projectId: "fresh-veggies-b5f72",
-    storageBucket: "YOUR_APP.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "YOUR_APP_ID"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // Save function (make it global)
-  window.savePrices = async function () {
-    const inputs = document.querySelectorAll("#priceForm input");
-    const newPrices = {};
-    inputs.forEach(input => {
-      newPrices[input.name] = parseInt(input.value);
-    });
-
-    try {
-      await setDoc(doc(db, "prices", "latest"), newPrices);
-      alert("✅ Prices updated for all users!");
-    } catch (err) {
-      alert("Error updating prices: " + err.message);
-    }
-  };
-</script>
-
-
+  
 
 <!-- Footer -->
 <footer class="bg-success text-white py-5 mt-5">
