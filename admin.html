@@ -98,7 +98,9 @@
   </nav>
   </div>
 
-  <script>
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     const password = "shop123";
 
     function checkPassword() {
@@ -131,23 +133,45 @@
     }
 
 
-  async function savePrices() {
-    const inputs = document.querySelectorAll("#priceForm input");
-    const newPrices = {};
-    inputs.forEach(input => {
-      newPrices[input.name] = parseInt(input.value);
-    });
 
-    try {
-      await db.collection("prices").doc("latest").set(newPrices);
-      alert("✅ Prices updated for all users!");
-    } catch (err) {
-      alert("Error updating prices: " + err.message);
-    }
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_APP.firebaseapp.com",
+    projectId: "YOUR_APP",
+    storageBucket: "YOUR_APP.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "YOUR_APP_ID"
   }
 
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  </script>
+  // Attach db and setDoc to window so they are usable in the regular script
+  window.db = db;
+  window.setDoc = setDoc;
+  window.doc = doc;
+
+  async function savePrices() {
+  const inputs = document.querySelectorAll("#priceForm input");
+  const newPrices = {};
+  inputs.forEach(input => {
+    newPrices[input.name] = parseInt(input.value);
+  });
+
+  try {
+    await setDoc(doc(db, "prices", "latest"), newPrices);
+    alert("✅ Prices updated for all users!");
+  } catch (err) {
+    alert("Error updating prices: " + err.message);
+  }
+}
+
+</script>
+
+
+
+  
 
 </body>
 </html>
