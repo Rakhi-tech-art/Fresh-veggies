@@ -1,106 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Panel - Edit Prices</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="icon" href="images/icon.png" type="image/x-icon">
-  <style>
-    body {
-      background: linear-gradient(135deg, #dff9fb, #f6e58d);
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .box {
-      max-width: 600px;
-      margin: 80px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 0 25px rgba(0,0,0,0.1);
-    }
-    h2, h3 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #2f3542;
-    }
-    .form-label {
-      font-weight: 600;
-    }
-    .form-control {
-      margin-bottom: 20px;
-      border-radius: 8px;
-    }
-    .btn {
-      width: 100%;
-      border-radius: 8px;
-    }
-    .alert-box {
-      display: none;
-      margin-top: 20px;
-    }
-  </style>
+  <title>Admin Panel</title>
 </head>
 <body>
-
-  <div id="login" class="box">
-    <h2>🔐 Shopkeeper Login</h2>
-    <div class="mb-3">
-      <input type="password" id="password" class="form-control" placeholder="Enter password" />
-    </div>
-    <button onclick="checkPassword()" class="btn btn-primary">Login</button>
-    <div class="alert alert-danger alert-box" id="loginAlert">❌ Incorrect password. Try again.</div>
-  </div>
-
-  <div id="editor" class="box" style="display:none;">
-    <h3>📋 Edit Vegetable Prices</h3>
-    <div id="priceForm"></div>
-      <button onclick="updatePrice()">Update Price</button>
-    <div class="alert alert-success alert-box" id="successAlert">✅ Prices updated successfully!</div>
-    <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg" style="background-color: #d4edda;">
-    <div class="container">
-      <a class="navbar-brand fw-bold text-success d-flex align-items-center" href="index.html">
-        <i class="bi bi-basket-fill me-2"></i>Fresh Veggies
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active text-success d-flex align-items-center" href="index.html">
-              <i class="bi bi-house-door-fill me-1"></i>Home
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-success d-flex align-items-center" href="about.html">
-              <i class="bi bi-info-circle-fill me-1"></i>About
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-success d-flex align-items-center" href="products.html">
-              <i class="bi bi-bag-fill me-1"></i>Products
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-success d-flex align-items-center" href="contact.html">
-              <i class="bi bi-telephone-fill me-1"></i>Contact
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  </div>
+  <h1>Update Vegetable Price</h1>
+  <input type="text" id="vegName" placeholder="Vegetable Name" />
+  <input type="number" id="vegPrice" placeholder="Price (per kg)" />
+  <button onclick="updatePrice()">Update Price</button>
 
   <script type="module">
-
-    const password = "shop123";
-    
     import { db } from './firebase.js';
     import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
@@ -115,50 +24,6 @@
         alert("Please enter valid data.");
       }
     }
-
-    
-
-    function checkPassword() {
-      const entered = document.getElementById("password").value;
-      const alertBox = document.getElementById("loginAlert");
-
-      if (entered === password) {
-        document.getElementById("login").style.display = "none";
-        document.getElementById("editor").style.display = "block";
-        loadPrices();
-      } else {
-        alertBox.style.display = "block";
-        setTimeout(() => alertBox.style.display = "none", 3000);
-      }
-    }
-
-    function loadPrices() {
-      fetch("prices.json")
-        .then(res => res.json())
-        .then(data => {
-          const container = document.getElementById("priceForm");
-          container.innerHTML = '';
-          for (const item in data) {
-            container.innerHTML += `
-              <label class="form-label">${item} Price (₹/kg):</label>
-              <input type="number" name="${item}" value="${data[item]}" class="form-control"/>
-            `;
-          }
-        });
-    }
-
-    function savePrices() {
-      const inputs = document.querySelectorAll("#priceForm input");
-      const newPrices = {};
-      inputs.forEach(input => {
-        newPrices[input.name] = parseInt(input.value);
-      });
-      localStorage.setItem("vegPrices", JSON.stringify(newPrices));
-      const successAlert = document.getElementById("successAlert");
-      successAlert.style.display = "block";
-      setTimeout(() => successAlert.style.display = "none", 3000);
-    }
   </script>
-
 </body>
 </html>
