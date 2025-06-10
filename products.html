@@ -769,37 +769,23 @@
 <a href="https://wa.me/917977531001?text=Hello%2C%20I%20am%20interested%20in%20your%20fresh%20vegetables." target="_blank" class="btn btn-success rounded-circle position-fixed" style="bottom: 20px; right: 20px; width: 60px; height: 60px;">
   <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="Chat" width="30" height="30" />
 </a>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        fetch("prices.json")
-            .then(res => res.json())
-            .then(defaultPrices => {
-                const prices = JSON.parse(localStorage.getItem("vegPrices")) || defaultPrices;
+<script type="module">
+    import { db } from './firebase.js';
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-                const gramItems = ["Mushroom", "Broccoli", "Color_capsicum", "Iceberg", "Sweet_corn"];
-                const bunchItems = ["coriander", "Spinach", "Onion_leaves","Fenugreek_leaves"];
-                const pieceItems = ["lemon"];
+    async function loadPrices() {
+      const priceList = document.getElementById('priceList');
+      const querySnapshot = await getDocs(collection(db, "prices"));
+      priceList.innerHTML = "";
 
-                for (const item in prices) {
-                    const el = document.getElementById(item);
-                    if (el) {
-                        let unit = " / Kg";  // Default
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        priceList.innerHTML += `<p>${doc.id}: ₹${data.price} per kg</p>`;
+      });
+    }
 
-                        if (gramItems.includes(item)) {
-                            unit = " / 200g";
-                        } else if (bunchItems.includes(item)) {
-                            unit = " / bunch";
-                        } else if (pieceItems.includes(item)) {
-                            unit = " / piece";
-                        }
-
-                        el.innerText = "₹" + prices[item] + unit;
-                    }
-                }
-            });
-    });
-</script>
-
+    loadPrices();
+  </script>
 
 
 

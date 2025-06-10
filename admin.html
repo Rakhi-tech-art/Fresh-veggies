@@ -58,7 +58,7 @@
   <div id="editor" class="box" style="display:none;">
     <h3>📋 Edit Vegetable Prices</h3>
     <div id="priceForm"></div>
-    <button type="button" onclick="savePrices()" class="btn btn-success mt-3">💾 Save Prices</button>
+      <button onclick="updatePrice()">Update Price</button>
     <div class="alert alert-success alert-box" id="successAlert">✅ Prices updated successfully!</div>
     <!-- Navbar -->
   <nav class="navbar navbar-expand-lg" style="background-color: #d4edda;">
@@ -97,7 +97,22 @@
   </nav>
   </div>
 
-  <script>
+  <script type="module">
+    import { db } from './firebase.js';
+    import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    async function updatePrice() {
+      const name = document.getElementById('vegName').value;
+      const price = parseFloat(document.getElementById('vegPrice').value);
+
+      if (name && price) {
+        await setDoc(doc(db, "prices", name.toLowerCase()), { price: price });
+        alert("Price updated successfully!");
+      } else {
+        alert("Please enter valid data.");
+      }
+    }
+
     const password = "shop123";
 
     function checkPassword() {
