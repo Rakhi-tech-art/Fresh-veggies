@@ -129,17 +129,23 @@
         });
     }
 
-    function savePrices() {
-      const inputs = document.querySelectorAll("#priceForm input");
-      const newPrices = {};
-      inputs.forEach(input => {
-        newPrices[input.name] = parseInt(input.value);
-      });
-      localStorage.setItem("vegPrices", JSON.stringify(newPrices));
-      const successAlert = document.getElementById("successAlert");
-      successAlert.style.display = "block";
-      setTimeout(() => successAlert.style.display = "none", 3000);
+
+  async function savePrices() {
+    const inputs = document.querySelectorAll("#priceForm input");
+    const newPrices = {};
+    inputs.forEach(input => {
+      newPrices[input.name] = parseInt(input.value);
+    });
+
+    try {
+      await db.collection("prices").doc("latest").set(newPrices);
+      alert("✅ Prices updated for all users!");
+    } catch (err) {
+      alert("Error updating prices: " + err.message);
     }
+  }
+
+
   </script>
 
 </body>

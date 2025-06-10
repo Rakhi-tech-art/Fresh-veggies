@@ -274,7 +274,26 @@
     </div>
   </div>
 </section>
-  
+  <!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+
+<script>
+  // Replace with your actual config from Firebase Console
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_APP.firebaseapp.com",
+    projectId: "fresh-veggies-b5f72",
+    storageBucket: "YOUR_APP.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "YOUR_APP_ID"
+  };
+
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+
 
 <!-- Footer -->
 <footer class="bg-success text-white py-5 mt-5">
