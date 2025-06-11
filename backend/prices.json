@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "Potato": 30,
   "tomato": 40,
@@ -39,4 +40,47 @@
   "papdi": 80,
   "parwar": 80,
   "suran": 120
+=======
+{
+  "Potato": 30,
+  "tomato": 40,
+  "onion": 40,
+  "Carrot": 60,
+  "Spinach": 20,
+  "Beetroot": 60,
+  "ladyfinger": 80,
+  "Bottle_gourd": 60,
+  "Cauliflower": 100,
+  "Color_capsicum": 200,
+  "coriander": 50,
+  "Green_capsicum": 80,
+  "Ivy_gourd": 80,
+  "idge_gourd": 80,
+  "Green_chili": 60,
+  "Green_peas": 160,
+  "Bittergourd": 80,
+  "cluster_beans": 140,
+  "Brinjal": 60,
+  "Cabbage": 40,
+  "lemon": 50,
+  "BeanSeeds": 120,
+  "Broccoli": 220,
+  "Bharta_aigan": 60,
+  "Fenugreek_leaves": 30,
+  "garlic": 120,
+  "Iceberg": 160,
+  "Ginger": 80,
+  "Onion_leaves": 50,
+  "Sweet_corn": 120,
+  "Mushroom": 200,
+  "Pumpkin": 40,
+  "cucumber": 60,
+  "senga": 120,
+  "chauli": 1010,
+  "gevda": 80,
+  "kakdi": 60,
+  "papdi": 80,
+  "parwar": 80,
+  "suran": 120
+>>>>>>> fed2af068bccde4514c19b99560763b3eaec8ea5
 }

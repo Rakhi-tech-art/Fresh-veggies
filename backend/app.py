@@ -8,35 +8,36 @@ CORS(app)
 
 PRICES_FILE = os.path.join(os.path.dirname(__file__), 'prices.json')
 
-# Load prices from JSON
 def load_prices():
     with open(PRICES_FILE, 'r') as f:
         return json.load(f)
 
-# Save prices to JSON
 def save_prices(prices):
     with open(PRICES_FILE, 'w') as f:
         json.dump(prices, f, indent=2)
 
-@app.route('/prices', methods=['GET'])
+@app.route("/prices", methods=["GET"])
 def get_prices():
-    prices = load_prices()
-    return jsonify([{"name": k, "price": v} for k, v in prices.items()])
+    try:
+        prices = load_prices()
+        return jsonify(prices)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/update-price', methods=['POST'])
+@app.route("/update_price", methods=["POST"])
 def update_price():
-    data = request.json
-    name = data.get("name")
-    price = data.get("price")
+    try:
+        data = request.get_json()
+        name = data.get("name")
+        price = data.get("price")
 
-    if not name or price is None:
-        return jsonify({"error": "Missing name or price"}), 400
+        prices = load_prices()
+        prices[name] = price
+        save_prices(prices)
 
-    prices = load_prices()
-    prices[name] = price
-    save_prices(prices)
+        return jsonify({"message": "Price updated successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-    return jsonify({"message": f"Price for {name} updated to ₹{price}."}), 200
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
