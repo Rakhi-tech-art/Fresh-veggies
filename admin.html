@@ -1,20 +1,29 @@
 <script>
-  async function updatePrice() {
-    const name = document.getElementById("veggieName").value.trim();
-    const price = parseInt(document.getElementById("veggiePrice").value.trim());
+  async function loadPrices() {
+    const res = await fetch("https://fa0458f4-8c8d-4b41-bd76-77984438cf8c-00-3fvvdrdoxcsnj.sisko.replit.dev/prices");
+    const data = await res.json();
+    console.log("Prices:", data);
+    // TODO: you can render the prices to the page if needed
+  }
 
-    const response = await fetch("http://localhost:5000/update-price", {
+  async function updatePrice(name, new_price) {
+    const res = await fetch("https://fa0458f4-8c8d-4b41-bd76-77984438cf8c-00-3fvvdrdoxcsnj.sisko.replit.dev/update_price", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, price })
+      body: JSON.stringify({ name: name, price: new_price }),
     });
 
-    const result = await response.json();
-    alert(result.message || "Price updated.");
+    const result = await res.json();
+    console.log("Update response:", result);
+    alert("Price updated successfully!");
+    loadPrices();
   }
+
+  window.onload = loadPrices;
 </script>
-<div>
-  <input type="text" id="veggieName" placeholder="Vegetable Name">
-  <input type="number" id="veggiePrice" placeholder="Price in ₹">
-  <button onclick="updatePrice()">Update Price</button>
-</div>
+
+<form onsubmit="event.preventDefault(); updatePrice(vegName.value, vegPrice.value)">
+  <input id="vegName" placeholder="Vegetable name" required />
+  <input id="vegPrice" type="number" placeholder="New price" required />
+  <button type="submit">Update Price</button>
+</form>
