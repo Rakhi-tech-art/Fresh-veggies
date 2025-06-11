@@ -1,94 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Admin Panel - Fresh Veggies</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f9f9f9;
-    }
+<script>
+  async function updatePrice() {
+    const name = document.getElementById("veggieName").value.trim();
+    const price = parseInt(document.getElementById("veggiePrice").value.trim());
 
-    h1 {
-      color: #4CAF50;
-    }
+    const response = await fetch("http://localhost:5000/update-price", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, price })
+    });
 
-    form {
-      margin-top: 20px;
-    }
+    const result = await response.json();
+    alert(result.message || "Price updated.");
+  }
+</script>
 
-    input, button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-    }
-
-    #price-list {
-      margin-top: 30px;
-      background: #fff;
-      padding: 15px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .veg-item {
-      margin-bottom: 10px;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>Fresh Veggies – Admin Panel</h1>
-
-  <form onsubmit="event.preventDefault(); updatePrice(vegName.value, vegPrice.value)">
-    <input id="vegName" placeholder="Vegetable name" required />
-    <input id="vegPrice" type="number" placeholder="New price" required />
-    <button type="submit">Update Price</button>
-  </form>
-
-  <div id="price-list"></div>
-
-  <script>
-    const BACKEND_URL = "https://fresh-veggie-backend.up.railway.app";
-
-
-    async function loadPrices() {
-      try {
-        const res = await fetch(`${BACKEND_URL}/prices`);
-        const data = await res.json();
-
-        const priceListDiv = document.getElementById("price-list");
-        priceListDiv.innerHTML = "<h2>Current Prices</h2>";
-
-        for (const [veg, price] of Object.entries(data)) {
-          priceListDiv.innerHTML += `<div class="veg-item"><strong>${veg}</strong>: ₹${price}</div>`;
-        }
-      } catch (error) {
-        console.error("Failed to load prices:", error);
-        alert("Error loading prices. Make sure your backend is working.");
-      }
-    }
-
-    async function updatePrice(name, new_price) {
-      try {
-        const res = await fetch(`${BACKEND_URL}/update_price`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: name.toLowerCase(), price: new_price })
-        });
-
-        const result = await res.json();
-        console.log("Update response:", result);
-        alert("✅ Price updated successfully!");
-        loadPrices();
-      } catch (error) {
-        console.error("Failed to update price:", error);
-        alert("Error updating price.");
-      }
-    }
-
-    window.onload = loadPrices;
-  </script>
-</body>
-</html>
+<div>
+  <input type="text" id="veggieName" placeholder="Vegetable Name">
+  <input type="number" id="veggiePrice" placeholder="Price in ₹">
+  <button onclick="updatePrice()">Update Price</button>
+</div>
