@@ -1,44 +1,57 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import json
+import sqlite3
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Allow cross-origin requests
 
-PRICES_FILE = os.path.join(os.path.dirname(__file__), 'prices.json')
+DB_NAME = 'veg_prices.db'
 
-def load_prices():
-    with open(PRICES_FILE, 'r') as f:
-        return json.load(f)
+# Initialize database if it doesn't exist
+def init_db():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS vegetables (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE,
+            price REAL
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
-def save_prices(prices):
-    with open(PRICES_FILE, 'w') as f:
-        json.dump(prices, f, indent=2)
-
-@app.route("/prices", methods=["GET"])
+# Get all veggie prices
+@app.route('/get-prices', methods=['GET'])
 def get_prices():
-    try:
-        prices = load_prices()
-        return jsonify(prices)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute("SELECT name, price FROM vegetables")
+    data = cursor.fetchall()
+    conn.close()
+    return jsonify([{ "name": name, "price": price } for name, price in data])
 
-@app.route("/update_price", methods=["POST"])
+# Update price of a veggie
+@app.route('/update-price', methods=['POST'])
 def update_price():
-    try:
-        data = request.get_json()
-        name = data.get("name")
-        price = data.get("price")
+    data = request.json
+    name = data.get("name")
+    price = data.get("price")
 
-        prices = load_prices()
-        prices[name] = price
-        save_prices(prices)
+    if not name or price is None:
+        return jsonify({"error": "Missing name or price"}), 400
 
-        return jsonify({"message": "Price updated successfully"})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO vegetables (name, price) VALUES (?, ?) ON CONFLICT(name) DO UPDATE SET price = excluded.price", (name, price))
+    conn.commit()
+    conn.close()
 
+    return jsonify({"message": f"Price updated for {name}", "price": price})
+
+# Entry point
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
-
+    init_db()
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host="0.0.0.0", port=port)
