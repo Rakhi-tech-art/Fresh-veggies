@@ -770,46 +770,35 @@
   <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="Chat" width="30" height="30" />
 </a>
 <script>
-  // Replace 'yourusername' with your actual PythonAnywhere username
-  const API_URL = "https://rakhijaiswal.pythonanywhere.com/"; 
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("prices.json")
+            .then(res => res.json())
+            .then(defaultPrices => {
+                const prices = JSON.parse(localStorage.getItem("vegPrices")) || defaultPrices;
 
-  async function loadPrices() {
-    const res = await fetch(`${API_URL}/prices`);
-    const data = await res.json();
+                const gramItems = ["Mushroom", "Broccoli", "Color_capsicum", "Iceberg", "Sweet_corn"];
+                const bunchItems = ["coriander", "Spinach", "Onion_leaves","Fenugreek_leaves"];
+                const pieceItems = ["lemon"];
 
-    data.forEach(item => {
-      let id = item.name.replace(/\s+/g, '').replace(/[^a-zA-Z0-9_]/g, '');
-      const span = document.getElementById(id);
-      if (span) {
-        span.innerText = `₹${item.price} / kg`;
-      }
+                for (const item in prices) {
+                    const el = document.getElementById(item);
+                    if (el) {
+                        let unit = " / Kg";  // Default
+
+                        if (gramItems.includes(item)) {
+                            unit = " / 200g";
+                        } else if (bunchItems.includes(item)) {
+                            unit = " / bunch";
+                        } else if (pieceItems.includes(item)) {
+                            unit = " / piece";
+                        }
+
+                        el.innerText = "₹" + prices[item] + unit;
+                    }
+                }
+            });
     });
-  }
-
-  async function updatePrice() {
-    const name = document.getElementById("veggieName").value.trim();
-    const price = parseInt(document.getElementById("veggiePrice").value.trim());
-
-    const response = await fetch(`${API_URL}/update-price`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, price })
-    });
-
-    const result = await response.json();
-    alert(result.message || "Price updated.");
-  }
 </script>
-
-<div>
-  <input type="text" id="veggieName" placeholder="Vegetable Name">
-  <input type="number" id="veggiePrice" placeholder="Price in ₹">
-  <button onclick="updatePrice()">Update Price</button>
-</div>
-  loadPrices();
-</script>
-
-
 
 
 
