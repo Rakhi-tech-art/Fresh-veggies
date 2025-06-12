@@ -38,9 +38,5 @@ def update_price():
 
     return jsonify({"message": f"Price for {name} updated to ₹{price}."}), 200
 
-from os import environ
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(environ.get("PORT", 5000)))
-
-
+if __name__ == '__main__':
+    app.run(debug=True)
