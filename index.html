@@ -769,35 +769,57 @@
 <a href="https://wa.me/917977531001?text=Hello%2C%20I%20am%20interested%20in%20your%20fresh%20vegetables." target="_blank" class="btn btn-success rounded-circle position-fixed" style="bottom: 20px; right: 20px; width: 60px; height: 60px;">
   <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="Chat" width="30" height="30" />
 </a>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script> 
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        fetch("prices.json")
-            .then(res => res.json())
-            .then(defaultPrices => {
-                const prices = JSON.parse(localStorage.getItem("vegPrices")) || defaultPrices;
+  // ✅ Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCMrGZGcrirpU_XiRv7lwnc_CqDv4dv_88",
+    authDomain: "freshveggies-e0949.firebaseapp.com",
+    projectId: "freshveggies-e0949",
+    storageBucket: "freshveggies-e0949.firebasestorage.app",
+    messagingSenderId: "57470103708",
+    appId: "1:57470103708:web:4bd3d8c1a675f8ea823d59",
+    measurementId: "G-2N1X0FE3XY"
+  };
 
-                const gramItems = ["Mushroom", "Broccoli", "Color_capsicum", "Iceberg"];
-                const bunchItems = ["coriander", "Spinach", "Onion_leaves","Fenugreek_leaves"];
-                const pieceItems = ["lemon"];
+  // ✅ Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  console.log("Firebase initialized");
 
-                for (const item in prices) {
-                    const el = document.getElementById(item);
-                    if (el) {
-                        let unit = " / Kg";  // Default
+  // ✅ Real-time price update
+  document.addEventListener("DOMContentLoaded", () => {
+    db.collection("product").onSnapshot((snapshot) => {
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const el = document.getElementById(doc.id); // Match element ID to doc ID
 
-                        if (gramItems.includes(item)) {
-                            unit = " / 200g";
-                        } else if (bunchItems.includes(item)) {
-                            unit = " / bunch";
-                        } else if (pieceItems.includes(item)) {
-                            unit = " / piece";
-                        }
+        if (el) {
+          let unit = " / Kg";
+          const gramItems = ["Mushroom", "Broccoli", "Color_capsicum", "Iceberg"];
+          const bunchItems = ["coriander", "Spinach", "Onion_leaves", "Fenugreek_leaves"];
+          const pieceItems = ["lemon"];
 
-                        el.innerText = "₹" + prices[item] + unit;
-                    }
-                }
-            });
+          if (gramItems.includes(data.name)) {
+            unit = " / 200g";
+          } else if (bunchItems.includes(data.name)) {
+            unit = " / bunch";
+          } else if (pieceItems.includes(data.name)) {
+            unit = " / piece";
+          }
+
+          el.innerText = `₹${data.price}${unit}`;
+        } else {
+          console.warn(`No HTML element found with id: ${doc.id}`);
+        }
+      });
+    }, (error) => {
+      console.error("Error listening to price updates:", error);
     });
+  });
 </script>
 
 
