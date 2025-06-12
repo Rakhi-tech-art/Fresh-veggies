@@ -770,8 +770,11 @@
   <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="Chat" width="30" height="30" />
 </a>
 <script>
+  // Replace 'yourusername' with your actual PythonAnywhere username
+  const API_URL = "https://rakhijaiswal.pythonanywhere.com/"; 
+
   async function loadPrices() {
-    const res = await fetch("http://localhost:5000/prices");
+    const res = await fetch(`${API_URL}/prices`);
     const data = await res.json();
 
     data.forEach(item => {
@@ -783,6 +786,26 @@
     });
   }
 
+  async function updatePrice() {
+    const name = document.getElementById("veggieName").value.trim();
+    const price = parseInt(document.getElementById("veggiePrice").value.trim());
+
+    const response = await fetch(`${API_URL}/update-price`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, price })
+    });
+
+    const result = await response.json();
+    alert(result.message || "Price updated.");
+  }
+</script>
+
+<div>
+  <input type="text" id="veggieName" placeholder="Vegetable Name">
+  <input type="number" id="veggiePrice" placeholder="Price in ₹">
+  <button onclick="updatePrice()">Update Price</button>
+</div>
   loadPrices();
 </script>
 

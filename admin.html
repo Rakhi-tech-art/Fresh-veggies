@@ -1,17 +1,25 @@
 <script>
-  async function updatePrice() {
-    const name = document.getElementById("veggieName").value.trim();
-    const price = parseInt(document.getElementById("veggiePrice").value.trim());
+   async function updatePrice() {
+    try {
+        const name = document.getElementById("veggieName").value.trim();
+        const price = parseInt(document.getElementById("veggiePrice").value.trim());
 
-    const response = await fetch("http://localhost:5000/update-price", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, price })
-    });
+        const response = await fetch(`${API_URL}/update-price`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, price })
+        });
 
-    const result = await response.json();
-    alert(result.message || "Price updated.");
-  }
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        alert(result.message || "Price updated.");
+    } catch (error) {
+        alert(`Error: ${error.message}`);
+    }
+}
 </script>
 
 <div>
